@@ -1,44 +1,50 @@
-use core::str;
 use read_input::prelude::*;
 use std::char;
 use std::io;
+use std::io::Write;
 
 fn main() {
     let mut new_run = String::from("y");
 
     while new_run.trim() == "y" {
-        let mut res = 0;
-        let op;
+        header();
 
-        println!("\nEnter your first number");
+        print!("\n\tEnter your first number:\t");
         let nr1: i32 = input().get();
 
-        println!("\nEnter your operator(+,-,*,/)");
-        op = input().get();
+        print!("\n\tEnter your operator(+,-,*,/):\t");
+        let op = input().get();
 
-        println!("\nEnter your second number");
+        print!("\n\tEnter your second number:\t");
         let nr2: i32 = input().get();
 
         if op == '/' || op == '*' || op == '+' || op == '-' {
             if op == '/' && nr2 == 0 {
-                println!("\nYou cant divide with 0 or lower");
+                print!("\n\tYou cant divide with 0 or lower");
             } else {
-                res = calc_result(nr1, nr2, op);
-                println!("\nYour result is: {}", res)
+                let res = calc_result(nr1, nr2, op);
+                print!("\n\tYour result is: {}", res)
             }
         } else {
-            println!("\nYou Entered an invalid operator");
+            print!("\n\tYou Entered an invalid operator");
         }
-        println!("\nYou want to make an new calculation? (y/n)");
+        print!("\n\n\tYou want to make an new calculation? (y/n):\t");
+        io::stdout().flush().expect("Failed to flush");
         new_run = rerun().to_lowercase();
     }
+}
+
+fn header() {
+    print!("\x1B[2J\x1B[1;1H");
+    println!("\n\tRust Calculator");
+    println!("\t===============");
 }
 
 fn rerun() -> String {
     let mut input = String::new();
     io::stdin()
         .read_line(&mut input)
-        .expect("Failed to read input");
+        .expect("\n\tFailed to read input");
     input
 }
 
@@ -50,7 +56,7 @@ fn calc_result(nr1: i32, nr2: i32, op: char) -> i32 {
         '*' => res = nr1 * nr2,
         '/' => res = nr1 / nr2,
         _ => {
-            println!("\nYou entered an invalid operator");
+            println!("\n\tYou entered an invalid operator");
         }
     };
     res
