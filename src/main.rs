@@ -1,36 +1,41 @@
 use read_input::prelude::*;
-use std::char;
 use std::io;
 use std::io::Write;
 
 fn main() {
     let mut new_run = String::from("y");
+    let op_list: [String; 4] = [
+        "+".to_string(),
+        "-".to_string(),
+        "/".to_string(),
+        "*".to_string(),
+    ];
 
     while new_run.trim() == "y" {
         header();
 
-        print!("\n\tEnter your first number:\t");
+        println!("\n\tEnter your first number: ");
         let nr1: i32 = input().get();
 
-        print!("\n\tEnter your operator(+,-,*,/):\t");
-        let op = input().get();
+        println!("\n\tEnter your operator(+,-,*,/): ");
+        let op = user_input().trim().to_string();
 
-        print!("\n\tEnter your second number:\t");
+        println!("\n\tEnter your second number: ");
         let nr2: i32 = input().get();
 
-        if op == '/' || op == '*' || op == '+' || op == '-' {
-            if op == '/' && nr2 == 0 {
-                print!("\n\tYou cant divide with 0 or lower");
+        if op_list.contains(&op.to_string()) {
+            if op == "/" && nr2 == 0 {
+                println!("\n\tYou cant divide with 0 or lower");
             } else {
-                let res = calc_result(nr1, nr2, op);
-                print!("\n\tYour result is: {}", res)
+                let res = calc_result(nr1, nr2, op.as_str());
+                println!("\n\tYour result is: {}", res)
             }
         } else {
-            print!("\n\tYou Entered an invalid operator");
+            println!("\n\tYou Entered an invalid operator");
         }
-        print!("\n\n\tYou want to make an new calculation? (y/n):\t");
+        print!("\n\tYou want to make an new calculation? (y/n): ");
         io::stdout().flush().expect("Failed to flush");
-        new_run = rerun().to_lowercase();
+        new_run = user_input().to_lowercase();
     }
 }
 
@@ -40,7 +45,7 @@ fn header() {
     println!("\t===============");
 }
 
-fn rerun() -> String {
+fn user_input() -> String {
     let mut input = String::new();
     io::stdin()
         .read_line(&mut input)
@@ -48,13 +53,13 @@ fn rerun() -> String {
     input
 }
 
-fn calc_result(nr1: i32, nr2: i32, op: char) -> i32 {
+fn calc_result(nr1: i32, nr2: i32, op: &str) -> i32 {
     let mut res: i32 = 0;
     match op {
-        '+' => res = nr1 + nr2,
-        '-' => res = nr1 - nr2,
-        '*' => res = nr1 * nr2,
-        '/' => res = nr1 / nr2,
+        "+" => res = nr1 + nr2,
+        "-" => res = nr1 - nr2,
+        "*" => res = nr1 * nr2,
+        "/" => res = nr1 / nr2,
         _ => {
             println!("\n\tYou entered an invalid operator");
         }
